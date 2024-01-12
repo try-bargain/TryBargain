@@ -2,9 +2,8 @@ package com.project.trybargain.domain.user;
 
 import com.project.trybargain.domain.board.entity.Board;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 

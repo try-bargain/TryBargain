@@ -3,8 +3,8 @@ package com.project.trybargain.domain.board.entity;
 import com.project.trybargain.domain.user.User;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
-import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
