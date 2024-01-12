@@ -29,7 +29,8 @@ public class UserTest {
 
         UserInfo userInfo = new UserInfo("010-1234-5678","19910315",1,"50505","juso1","juso2");
 
-        User user2 = new User("tset01","1234","test_nm","erwr@nvaer.com",UserRoleEnum.USER, userInfo);
+        User user2 = new User("tset02","1234","test_nm","erwr@nvaer.com",UserRoleEnum.USER);
+        user2.addUserInfo(userInfo);
         userRepository.join(user2);
 
 
