@@ -36,4 +36,8 @@ public class UserInfo {
         this.address1 = address1;
         this.address2 = address2;
     }
+
+    public void addUser(User user) {
+        this.user = user;
+    }
 }
