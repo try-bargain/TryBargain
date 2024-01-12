@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.board.entity;
 
+import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.user.User;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
@@ -25,7 +26,7 @@ public class Board extends TimeStamp {
     private int price;
 
     @NotNull
-    private int like;
+    private int board_like;
 
     @NotNull
     @ColumnDefault("true")
@@ -35,12 +36,18 @@ public class Board extends TimeStamp {
     @Enumerated(value = EnumType.STRING)
     private BoardStatusEnum boardStatus;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public Board(BoardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+        this.price = requestDto.getPrice();
+    }
 }
 
