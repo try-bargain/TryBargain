@@ -1,4 +1,4 @@
-package com.project.trybargain.domain.user;
+package com.project.trybargain.domain.user.entity;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

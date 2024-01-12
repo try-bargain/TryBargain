@@ -1,9 +1,10 @@
-package com.project.trybargain.domain.user;
+package com.project.trybargain.domain.user.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,4 +32,16 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Board> board = new ArrayList<>();
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private UserInfo userInfo;
+
+    public User(String user_id, String user_pw, String user_nm, String email, UserRoleEnum user_role, UserInfo userInfo) {
+        this.user_id = user_id;
+        this.user_pw = user_pw;
+        this.user_nm = user_nm;
+        this.email = email;
+        this.user_role = user_role;
+        this.userInfo = userInfo;
+    }
 }
