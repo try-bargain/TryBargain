@@ -1,6 +1,7 @@
 package com.project.trybargain.domain.user.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.comment.entity.Comment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
@@ -32,10 +33,13 @@ public class User {
     private UserRoleEnum user_role;
 
     @OneToMany(mappedBy = "user")
-    private List<Board> board = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInfo userInfo;
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> commentList = new ArrayList<>();
 
     public User(String user_id, String user_pw, String user_nm, String email, UserRoleEnum user_role) {
         this.user_id = user_id;

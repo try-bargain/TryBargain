@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
-//@Entity
+@Entity
 @NoArgsConstructor
 @Table(name = "comment_like")
 public class CommentLike {
