@@ -1,6 +1,8 @@
 package com.project.trybargain.domain.user.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.chat.entity.ChattingMessage;
+import com.project.trybargain.domain.chat.entity.ChattingRome;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
@@ -36,6 +38,13 @@ public class User {
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInfo userInfo;
+
+    @OneToMany(mappedBy = "user")
+    private List<ChattingRome> chattingRome = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<ChattingMessage> chattingMessages = new ArrayList<>();
+
 
     public User(String user_id, String user_pw, String user_nm, String email, UserRoleEnum user_role) {
         this.user_id = user_id;
