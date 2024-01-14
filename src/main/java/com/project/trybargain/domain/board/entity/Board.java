@@ -51,6 +51,9 @@ public class Board extends TimeStamp {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "board", fetch = FetchType.LAZY)
+    private BoardLike boardLike;
+
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
