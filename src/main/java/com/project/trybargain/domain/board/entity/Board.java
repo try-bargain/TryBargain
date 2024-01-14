@@ -1,7 +1,7 @@
 package com.project.trybargain.domain.board.entity;
 
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
-import com.project.trybargain.domain.user.User;
+import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
