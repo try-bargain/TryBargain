@@ -18,7 +18,6 @@ public class ChattingRome {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

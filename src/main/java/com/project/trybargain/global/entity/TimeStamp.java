@@ -1,10 +1,9 @@
 package com.project.trybargain.global.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -15,13 +14,11 @@ import java.time.LocalDateTime;
 public abstract class TimeStamp {
 
     @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime created_at;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt = null;
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt = null;
-
+    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime updated_at = null;
 }

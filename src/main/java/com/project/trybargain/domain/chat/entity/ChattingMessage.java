@@ -20,10 +20,10 @@ public class ChattingMessage {
     private ChattingRome chattingRome;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "receive_id")
     private User user;
 
-    private long receive_id;
+//    private long receive_id;
 
     private long sender_id;
 
