@@ -1,6 +1,9 @@
 package com.project.trybargain.domain.user.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.chat.entity.ChattingMessage;
+import com.project.trybargain.domain.chat.entity.ChattingRome;
+import com.project.trybargain.domain.comment.entity.Comment;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
