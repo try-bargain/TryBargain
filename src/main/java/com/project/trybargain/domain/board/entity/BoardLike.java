@@ -11,6 +11,11 @@ import org.hibernate.annotations.ColumnDefault;
 public class BoardLike {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @NotNull
+//    @ManyToOne(fetch = FetchType.LAZY)
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
