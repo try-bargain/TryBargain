@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoardRequestDto {
     private String title;
-    private String content;
+    private String contents;
     private int price;
-    private int like;
-    private boolean active_yn;
+    private long categoryId;
 }

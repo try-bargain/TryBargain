@@ -1,11 +1,13 @@
 package com.project.trybargain.domain.board.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -13,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Board extends TimeStamp {
 
@@ -24,7 +27,7 @@ public class Board extends TimeStamp {
     private String title;
 
     @NotNull
-    private String content;
+    private String contents;
 
     @NotNull
     private int price;
@@ -38,12 +41,13 @@ public class Board extends TimeStamp {
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private BoardStatusEnum boardStatus;
+    private BoardStatusEnum status = BoardStatusEnum.ING;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -56,8 +60,16 @@ public class Board extends TimeStamp {
 
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
-        this.content = requestDto.getContent();
+        this.contents = requestDto.getContents();
         this.price = requestDto.getPrice();
+    }
+
+    public void addUser(User user) {
+        this.user = user;
+    }
+
+    public void addCategory(Category category) {
+        this.category = category;
     }
 }
 

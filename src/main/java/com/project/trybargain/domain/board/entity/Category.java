@@ -26,5 +26,10 @@ public class Category {
     private boolean use_yn;
 
     @OneToMany(mappedBy = "category")
-    private List<Board> board = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
+
+    public void addBoardList(Board board) {
+        this.boardList.add(board);
+        board.addCategory(this);
+    }
 }
