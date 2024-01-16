@@ -5,6 +5,7 @@ import com.project.trybargain.domain.chat.entity.ChattingMessage;
 import com.project.trybargain.domain.chat.entity.ChattingRome;
 import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.user.dto.JoinRequestDto;
+import com.project.trybargain.global.config.WebSecurityConfig;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -61,6 +62,7 @@ public class User {
         this.user_nm = requestDto.getUser_nm();
         this.email = requestDto.getEmail();
     }
+
 
     public void addUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
