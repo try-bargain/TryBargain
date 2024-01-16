@@ -20,5 +20,5 @@ public abstract class TimeStamp {
 
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updated_at = null;
+    private LocalDateTime updated_at;
 }
