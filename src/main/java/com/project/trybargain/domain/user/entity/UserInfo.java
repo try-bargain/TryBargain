@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.user.entity;
 
+import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,11 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserInfo {
 
-
     @Id
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
-    @GeneratedValue
     private User user;
 
     private String htel;
@@ -28,13 +27,13 @@ public class UserInfo {
 
     private String address2;
 
-    public UserInfo(String htel, String birth, int sex_cd, String post, String address1, String address2) {
-        this.htel = htel;
-        this.birth = birth;
-        this.sex_cd = sex_cd;
-        this.post = post;
-        this.address1 = address1;
-        this.address2 = address2;
+    public UserInfo(JoinRequestDto requestDto) {
+        this.htel = requestDto.getHtel();
+        this.birth = requestDto.getBirth();
+        this.sex_cd = requestDto.getSex_cd();
+        this.post = requestDto.getPost();
+        this.address1 = requestDto.getAddress1();
+        this.address2 = requestDto.getAddress2();
     }
 
     public void addUser(User user) {

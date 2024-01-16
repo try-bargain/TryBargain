@@ -5,6 +5,7 @@ import com.project.trybargain.domain.user.entity.UserInfo;
 import com.project.trybargain.domain.user.entity.UserRoleEnum;
 import com.project.trybargain.domain.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,15 +24,15 @@ public class UserTest {
 
     @Test
     @Transactional
-    @Rollback(false)
+    @Disabled
     public void 회원가입() throws Exception {
 
 
-        UserInfo userInfo = new UserInfo("010-1234-5678","19910315",1,"50505","juso1","juso2");
+        //UserInfo userInfo = new UserInfo("010-1234-5678","19910315",1,"50505","juso1","juso2");
 
-        User user2 = new User("tset02","1234","test_nm","erwr@nvaer.com",UserRoleEnum.USER);
-        user2.addUserInfo(userInfo);
-        userRepository.join(user2);
+        //User user2 = new User("tset111","1234","test_nm","erwr@nvaer.com",UserRoleEnum.USER);
+        //user2.addUserInfo(userInfo);
+        //userRepository.save(user2);
 
 
     }

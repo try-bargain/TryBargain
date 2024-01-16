@@ -4,8 +4,10 @@ import com.project.trybargain.domain.board.entity.Board;
 import com.project.trybargain.domain.chat.entity.ChattingMessage;
 import com.project.trybargain.domain.chat.entity.ChattingRome;
 import com.project.trybargain.domain.comment.entity.Comment;
+import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class User {
 
     @Id
@@ -20,6 +23,7 @@ public class User {
     private long id;
 
     @NotNull
+    @Column(unique = true)
     private String user_id;
 
     @NotNull
@@ -28,11 +32,12 @@ public class User {
     @NotNull
     private String user_nm;
 
+    @Column(unique = true)
     private String email;
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
-    private UserRoleEnum user_role;
+    private UserRoleEnum user_role = UserRoleEnum.USER;
 
     @OneToMany(mappedBy = "user")
     private List<Board> board = new ArrayList<>();
@@ -50,12 +55,11 @@ public class User {
     private List<ChattingMessage> chattingMessages = new ArrayList<>();
 
 
-    public User(String user_id, String user_pw, String user_nm, String email, UserRoleEnum user_role) {
-        this.user_id = user_id;
-        this.user_pw = user_pw;
-        this.user_nm = user_nm;
-        this.email = email;
-        this.user_role = user_role;
+    public User(JoinRequestDto requestDto) {
+        this.user_id = requestDto.getUser_id();
+        this.user_pw = requestDto.getPassword();
+        this.user_nm = requestDto.getUser_nm();
+        this.email = requestDto.getEmail();
     }
 
     public void addUserInfo(UserInfo userInfo) {
