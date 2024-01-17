@@ -36,4 +36,9 @@ public class BoardController {
     public BoardResponseDto getBoard(@PathVariable long id) {
         return boardService.getBoard(id);
     }
+
+    @PutMapping("/board/{id}")
+    public BoardResponseDto updateBoard(@PathVariable long id, @RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return boardService.updateBoard(id, requestDto, userDetails.getUser());
+    }
 }

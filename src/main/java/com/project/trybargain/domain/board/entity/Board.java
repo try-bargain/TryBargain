@@ -73,5 +73,11 @@ public class Board extends TimeStamp {
     public void addCategory(Category category) {
         this.category = category;
     }
+
+    public void update(BoardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.price = requestDto.getPrice();
+    }
 }
 

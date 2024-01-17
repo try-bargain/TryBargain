@@ -7,6 +7,7 @@ import com.project.trybargain.domain.board.entity.Category;
 import com.project.trybargain.domain.board.repository.BoardRepository;
 import com.project.trybargain.domain.board.repository.CategoryRepository;
 import com.project.trybargain.domain.user.entity.User;
+import com.project.trybargain.domain.user.entity.UserRoleEnum;
 import com.project.trybargain.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,19 @@ public class BoardService {
     // 게시글 상세
     public BoardResponseDto getBoard(long id) {
         Board board = findBoard(id);
+        return new BoardResponseDto(board);
+    }
+
+    // 게시글 수정
+    @Transactional
+    public BoardResponseDto updateBoard(long id, BoardRequestDto requestDto, User user) {
+        Board board = findBoard(id);
+
+        if (board.getUser().getId() != user.getId() && user.getUser_role().equals(UserRoleEnum.USER)) {
+            throw new RuntimeException("해당 글의 작성자가 아닙니다.");
+        }
+        board.update(requestDto);
+
         return new BoardResponseDto(board);
     }
 

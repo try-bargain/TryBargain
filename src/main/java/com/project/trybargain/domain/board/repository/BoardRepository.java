@@ -41,4 +41,8 @@ public class BoardRepository {
                 .getResultList();
         return boardList.stream().findAny();
     }
+
+    public void update(Board board) {
+        em.merge(board);
+    }
 }
