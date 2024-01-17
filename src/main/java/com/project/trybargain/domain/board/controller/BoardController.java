@@ -26,4 +26,9 @@ public class BoardController {
     public List<BoardResponseDto> getBoards() {
         return boardService.getBoards();
     }
+
+    @GetMapping("/board/search")
+    public List<BoardResponseDto> searchBoards(@RequestParam(value = "query") String query) {
+        return boardService.searchBoards(query);
+    }
 }

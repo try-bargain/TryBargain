@@ -43,7 +43,7 @@ public class Board extends TimeStamp {
     @Enumerated(value = EnumType.STRING)
     private BoardStatusEnum status = BoardStatusEnum.ING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -55,8 +55,9 @@ public class Board extends TimeStamp {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "board", fetch = FetchType.LAZY)
-    private BoardLike boardLike;
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();

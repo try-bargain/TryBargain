@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.board.repository;
 
+import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.entity.Board;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,17 @@ public class BoardRepository {
     }
 
     public List<Board> findAllByTop100() {
-        List<Board> findBoards = em.createQuery("SELECT b FROM Board b LIMIT 100", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b", Board.class)
+                .setMaxResults(100)
                 .getResultList();
-        return findBoards;
+        return boardList;
+    }
+
+    public List<Board> findAllByTitle(String query) {
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.title LIKE :query", Board.class)
+                .setParameter("query", "%"+query+"%")
+                .getResultList();
+
+        return boardList;
     }
 }

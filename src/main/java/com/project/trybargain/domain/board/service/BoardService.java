@@ -26,8 +26,10 @@ public class BoardService {
     // 게시글 등록
     @Transactional
     public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
+        User selectUser = findUser(user.getId());
+
         Board board = new Board(requestDto);
-        board.addUser(user);
+        board.addUser(selectUser);
 
         Category category = findCategory(requestDto.getCategoryId());
         category.addBoardList(board);
@@ -40,6 +42,11 @@ public class BoardService {
     // 조회 상위 100개 - 추후 무한 스크롤링으로 처리 예정
     public List<BoardResponseDto> getBoards() {
         return boardRepository.findAllByTop100().stream().map(BoardResponseDto::new).toList();
+    }
+
+    // 게시물 검색
+    public List<BoardResponseDto> searchBoards(String query) {
+        return boardRepository.findAllByTitle(query).stream().map(BoardResponseDto::new).toList();
     }
 
     // 유저 검증
