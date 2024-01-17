@@ -15,8 +15,7 @@ public class BoardLike {
     private long id;
 
     @NotNull
-//    @ManyToOne(fetch = FetchType.LAZY)
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
     private Board board;
 

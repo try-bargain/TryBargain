@@ -36,14 +36,13 @@ public class Board extends TimeStamp {
     private int board_like;
 
     @NotNull
-    @ColumnDefault("true")
-    private boolean active_yn;
+    private boolean active_yn = true;
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private BoardStatusEnum status = BoardStatusEnum.ING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
@@ -55,8 +54,9 @@ public class Board extends TimeStamp {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "board", fetch = FetchType.LAZY)
-    private BoardLike boardLike;
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
@@ -66,10 +66,21 @@ public class Board extends TimeStamp {
 
     public void addUser(User user) {
         this.user = user;
+        user.addBoardList(this);
     }
 
     public void addCategory(Category category) {
         this.category = category;
+    }
+
+    public void update(BoardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.price = requestDto.getPrice();
+    }
+
+    public void delete() {
+        this.active_yn = false;
     }
 }
 
