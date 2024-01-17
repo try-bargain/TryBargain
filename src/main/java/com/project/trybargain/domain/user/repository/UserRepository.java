@@ -1,6 +1,7 @@
 package com.project.trybargain.domain.user.repository;
 
 import com.project.trybargain.domain.user.entity.User;
+import com.project.trybargain.domain.user.entity.UserInfo;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

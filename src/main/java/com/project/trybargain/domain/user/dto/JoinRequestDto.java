@@ -1,14 +1,11 @@
 package com.project.trybargain.domain.user.dto;
 
+import com.project.trybargain.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-@Setter
 @NoArgsConstructor
 public class JoinRequestDto {
 
@@ -24,4 +21,7 @@ public class JoinRequestDto {
     private String address1;
     private String address2;
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
