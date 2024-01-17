@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactory;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -32,5 +33,12 @@ public class BoardRepository {
                 .getResultList();
 
         return boardList;
+    }
+
+    public Optional<Board> findById(long id) {
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.id = :id", Board.class)
+                .setParameter("id", id)
+                .getResultList();
+        return boardList.stream().findAny();
     }
 }

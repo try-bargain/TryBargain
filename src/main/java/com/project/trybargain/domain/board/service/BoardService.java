@@ -49,6 +49,12 @@ public class BoardService {
         return boardRepository.findAllByTitle(query).stream().map(BoardResponseDto::new).toList();
     }
 
+    // 게시글 상세
+    public BoardResponseDto getBoard(long id) {
+        Board board = findBoard(id);
+        return new BoardResponseDto(board);
+    }
+
     // 유저 검증
     private User findUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
@@ -59,5 +65,11 @@ public class BoardService {
     private Category findCategory(long id) {
         return categoryRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 카테고리는 존재하지 않습니다."));
+    }
+
+    // 게시글 검증
+    private Board findBoard(long id) {
+        return boardRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 게시글은 존재하지 않습니다."));
     }
 }

@@ -31,4 +31,9 @@ public class BoardController {
     public List<BoardResponseDto> searchBoards(@RequestParam(value = "query") String query) {
         return boardService.searchBoards(query);
     }
+
+    @GetMapping("/board/{id}")
+    public BoardResponseDto getBoard(@PathVariable long id) {
+        return boardService.getBoard(id);
+    }
 }
