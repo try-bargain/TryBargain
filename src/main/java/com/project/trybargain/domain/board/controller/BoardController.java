@@ -6,10 +6,9 @@ import com.project.trybargain.domain.board.service.BoardService;
 import com.project.trybargain.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api")
@@ -23,4 +22,8 @@ public class BoardController {
         return boardService.createBoard(requestDto, userDetails.getUser());
     }
 
+    @GetMapping("/board")
+    public List<BoardResponseDto> getBoards() {
+        return boardService.getBoards();
+    }
 }
