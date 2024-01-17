@@ -8,6 +8,12 @@ class TryBargainApplicationTests {
 
     @Test
     void contextLoads() {
+
+    }
+
+    @Test
+    void test1() {
+
     }
 
 }
