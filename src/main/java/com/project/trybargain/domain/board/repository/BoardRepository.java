@@ -21,28 +21,23 @@ public class BoardRepository {
     }
 
     public List<Board> findAllByTop100() {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.active_yn = true", Board.class)
                 .setMaxResults(100)
                 .getResultList();
         return boardList;
     }
 
     public List<Board> findAllByTitle(String query) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.title LIKE :query", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.title LIKE :query AND b.active_yn = true", Board.class)
                 .setParameter("query", "%"+query+"%")
                 .getResultList();
-
         return boardList;
     }
 
     public Optional<Board> findById(long id) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.id = :id", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.id = :id AND b.active_yn = true", Board.class)
                 .setParameter("id", id)
                 .getResultList();
         return boardList.stream().findAny();
-    }
-
-    public void update(Board board) {
-        em.merge(board);
     }
 }

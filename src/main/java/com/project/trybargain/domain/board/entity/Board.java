@@ -36,8 +36,7 @@ public class Board extends TimeStamp {
     private int board_like;
 
     @NotNull
-    @ColumnDefault("true")
-    private boolean active_yn;
+    private boolean active_yn = true;
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
@@ -78,6 +77,10 @@ public class Board extends TimeStamp {
         this.title = requestDto.getTitle();
         this.contents = requestDto.getContents();
         this.price = requestDto.getPrice();
+    }
+
+    public void delete() {
+        this.active_yn = false;
     }
 }
 

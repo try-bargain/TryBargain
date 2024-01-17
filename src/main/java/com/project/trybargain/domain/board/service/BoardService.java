@@ -9,7 +9,10 @@ import com.project.trybargain.domain.board.repository.CategoryRepository;
 import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.domain.user.entity.UserRoleEnum;
 import com.project.trybargain.domain.user.repository.UserRepository;
+import com.project.trybargain.global.dto.MessageResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +70,20 @@ public class BoardService {
         board.update(requestDto);
 
         return new BoardResponseDto(board);
+    }
+
+    // 게시글 삭제
+    @Transactional
+    public ResponseEntity<MessageResponseDto> deleteBoard(long id, User user) {
+        Board board = findBoard(id);
+
+        if (board.getUser().getId() != user.getId() && user.getUser_role().equals(UserRoleEnum.USER)) {
+            throw new RuntimeException("해당 글의 작성자가 아닙니다.");
+        }
+        board.delete();
+
+        MessageResponseDto responseEntity = new MessageResponseDto("게시글 삭제를 성공하였습니다.",200);
+        return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
     }
 
     // 유저 검증
