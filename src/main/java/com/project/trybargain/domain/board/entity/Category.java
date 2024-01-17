@@ -1,6 +1,5 @@
 package com.project.trybargain.domain.board.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -26,7 +25,6 @@ public class Category {
     @ColumnDefault("true")
     private boolean use_yn;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "category")
     private List<Board> boardList = new ArrayList<>();
 
