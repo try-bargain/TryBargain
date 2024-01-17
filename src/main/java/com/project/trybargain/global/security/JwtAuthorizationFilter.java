@@ -29,7 +29,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         if (request.getRequestURI().startsWith("/api/auth/login") ||
-                request.getRequestURI().equals("/api/auth/join") ||
+                request.getRequestURI().equals("/api/auth/**") ||
                 request.getRequestURI().equals("/")) {
             log.debug("Pass Authorization : " + request.getRequestURI());
             filterChain.doFilter(request, response);
@@ -39,12 +39,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         String accessToken = jwtUtil.getJwtFromRequest(request);
 
         if(StringUtils.hasText(accessToken)) {
+
+            accessToken = jwtUtil.subStringToken(accessToken);
+
             if(!jwtUtil.validateToken(accessToken)) {
                 log.error("토큰정보가 일치하지 않습니다.");
                 return;
             }
-
-            accessToken = jwtUtil.subStringToken(accessToken);
 
             Claims info = jwtUtil.getUerInfoFromToken(accessToken);
 
