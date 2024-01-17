@@ -23,9 +23,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto requestDto) {
-        User user = findUser(1);
-
+    public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
         Board board = new Board(requestDto);
         board.addUser(user);
 

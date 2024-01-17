@@ -41,7 +41,7 @@ public class User {
     private UserRoleEnum user_role = UserRoleEnum.USER;
 
     @OneToMany(mappedBy = "user")
-    private List<Board> board = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInfo userInfo;
@@ -67,5 +67,9 @@ public class User {
     public void addUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
         userInfo.addUser(this);
+    }
+
+    public void addBoardList(Board board) {
+        this.boardList.add(board);
     }
 }

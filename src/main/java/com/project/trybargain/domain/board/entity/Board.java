@@ -66,6 +66,7 @@ public class Board extends TimeStamp {
 
     public void addUser(User user) {
         this.user = user;
+        user.addBoardList(this);
     }
 
     public void addCategory(Category category) {
