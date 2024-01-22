@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.user.service;
 
+import com.project.trybargain.domain.user.dto.FindUserRequestDto;
 import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import com.project.trybargain.domain.user.dto.MyPageResponseDto;
 import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
@@ -76,8 +77,8 @@ public class UserService {
     }
 
     // 아이디 중복 확인
-    public ResponseEntity<MessageResponseDto> duplicate(JoinRequestDto requestDto) {
-        Optional<User> user = userRepository.findUserByUserId(requestDto.getUser_id());
+    public ResponseEntity<MessageResponseDto> duplicate(FindUserRequestDto requestDto) {
+        Optional<User> user = userRepository.findUserByUserId(requestDto.getUserId());
 
         if(user.isEmpty()) {
             MessageResponseDto message = new MessageResponseDto("없는 userId 입니다. ", HttpStatus.OK.value());

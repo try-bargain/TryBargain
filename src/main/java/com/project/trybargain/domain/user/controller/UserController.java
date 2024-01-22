@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.user.controller;
 
+import com.project.trybargain.domain.user.dto.FindUserRequestDto;
 import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import com.project.trybargain.domain.user.dto.MyPageResponseDto;
 import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
@@ -10,7 +11,6 @@ import com.project.trybargain.global.security.ValidationGroups;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +52,7 @@ public class UserController {
     }
 
     @PostMapping("/auth/userIdCheck")
-    public ResponseEntity<MessageResponseDto> duplicate(@RequestBody JoinRequestDto requestDto) {
+    public ResponseEntity<MessageResponseDto> duplicate(@RequestBody FindUserRequestDto requestDto) {
         return userService.duplicate(requestDto);
     }
 
