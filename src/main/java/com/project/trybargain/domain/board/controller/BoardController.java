@@ -54,4 +54,9 @@ public class BoardController {
     public ResponseEntity<MessageResponseDto> likeBoard(@PathVariable long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.likeBoard(id, userDetails.getUser().getId());
     }
+
+    @PostMapping("/board/status/{id}")
+    public ResponseEntity<MessageResponseDto> statusChangeBoard(@PathVariable long id, @RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return boardService.statusChangeBoard(id, requestDto, userDetails.getUser());
+    }
 }

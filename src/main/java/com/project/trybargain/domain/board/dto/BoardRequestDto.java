@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.board.dto;
 
+import com.project.trybargain.domain.board.entity.BoardStatusEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,4 +11,5 @@ public class BoardRequestDto {
     private String contents;
     private int price;
     private long categoryId;
+    private String status;
 }
