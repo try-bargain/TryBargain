@@ -3,14 +3,16 @@ package com.project.trybargain.domain.comment.entity;
 import com.project.trybargain.domain.board.entity.Board;
 import com.project.trybargain.domain.comment.dto.CommentRequestDto;
 import com.project.trybargain.domain.user.entity.User;
-import com.project.trybargain.domain.user.entity.UserInfo;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+
+import java.util.Optional;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class Comment extends TimeStamp {
 
@@ -43,6 +45,11 @@ public class Comment extends TimeStamp {
     public void addUser(User user) {
         this.user = user;
         user.addComment(this);
+    }
+
+    public void addBoard(Board board) {
+        this.board = board;
+        board.addComment(this);
     }
 
     public Comment(CommentRequestDto requestDto) {

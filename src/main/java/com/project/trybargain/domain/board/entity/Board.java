@@ -1,6 +1,5 @@
 package com.project.trybargain.domain.board.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.user.entity.User;
@@ -9,7 +8,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +44,6 @@ public class Board extends TimeStamp {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -54,7 +51,6 @@ public class Board extends TimeStamp {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
-    @JsonIgnore
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<BoardLike> boardLikeList = new ArrayList<>();
 
@@ -68,6 +64,11 @@ public class Board extends TimeStamp {
         this.user = user;
         user.addBoardList(this);
     }
+
+    public void addComment(Comment comment) {
+        commentList.add(comment);
+    }
+
 
     public void addCategory(Category category) {
         this.category = category;
