@@ -5,6 +5,7 @@ import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.entity.Board;
 import com.project.trybargain.domain.board.entity.BoardLike;
+import com.project.trybargain.domain.board.entity.BoardStatusEnum;
 import com.project.trybargain.domain.board.entity.Category;
 import com.project.trybargain.domain.board.repository.BoardLikeRepository;
 import com.project.trybargain.domain.board.repository.BoardRepository;
@@ -68,9 +69,8 @@ public class BoardService {
     public BoardResponseDto updateBoard(long id, BoardRequestDto requestDto, User user) {
         Board board = findBoard(id);
 
-        if (board.getUser().getId() != user.getId() && user.getUser_role().equals(UserRoleEnum.USER)) {
-            throw new RuntimeException("해당 글의 작성자가 아닙니다.");
-        }
+        System.out.println("수정엉");
+        checkUser(board, user);
         board.update(requestDto);
 
         return new BoardResponseDto(board);
@@ -81,9 +81,7 @@ public class BoardService {
     public ResponseEntity<MessageResponseDto> deleteBoard(long id, User user) {
         Board board = findBoard(id);
 
-        if (board.getUser().getId() != user.getId() && user.getUser_role().equals(UserRoleEnum.USER)) {
-            throw new RuntimeException("해당 글의 작성자가 아닙니다.");
-        }
+        checkUser(board, user);
         board.delete();
 
         MessageResponseDto responseEntity = new MessageResponseDto("게시글 삭제를 성공하였습니다.",200);
@@ -115,6 +113,26 @@ public class BoardService {
         return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
     }
 
+    // 게시글 상태 변경
+    @Transactional
+    public ResponseEntity<MessageResponseDto> statusChangeBoard(long id, BoardRequestDto requestDto, User user) {
+        Board board = findBoard(id);
+
+        checkUser(board, user);
+        if (requestDto.getStatus().equals("ING")) {
+            board.changeStatus(BoardStatusEnum.ING);
+        }
+        if (requestDto.getStatus().equals("COMP")) {
+            board.changeStatus(BoardStatusEnum.COMP);
+        }
+        if (requestDto.getStatus().equals("CANCEL")) {
+            board.changeStatus(BoardStatusEnum.CANCEL);
+        }
+
+        MessageResponseDto responseEntity = new MessageResponseDto("게시글 상태 변경을 성공하였습니다.",200);
+        return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+    }
+
     // 유저 검증
     private User findUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
@@ -131,5 +149,11 @@ public class BoardService {
     private Board findBoard(long id) {
         return boardRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 게시글은 존재하지 않습니다."));
+    }
+
+    private void checkUser(Board board, User user) {
+        if (board.getUser().getId() != user.getId() && user.getUser_role().equals(UserRoleEnum.USER)) {
+            throw new RuntimeException("해당 글의 작성자가 아닙니다.");
+        }
     }
 }
