@@ -6,13 +6,15 @@ import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
 import com.project.trybargain.domain.user.service.UserService;
 import com.project.trybargain.global.dto.MessageResponseDto;
 import com.project.trybargain.global.security.UserDetailsImpl;
+import com.project.trybargain.global.security.ValidationGroups;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class UserController {
@@ -25,7 +27,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/auth/join")
-    public ResponseEntity<MessageResponseDto> join(@RequestBody JoinRequestDto joinRequestDto) {
+    public ResponseEntity<MessageResponseDto> join(@Validated(ValidationGroups.ValidationSequence.class) @RequestBody JoinRequestDto joinRequestDto) {
         return userService.join(joinRequestDto);
     }
 
@@ -35,7 +37,6 @@ public class UserController {
      * @return
      */
     @GetMapping("/mypage")
-    @ResponseBody
     public MyPageResponseDto mypage(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getMyInfo(userDetails.getUser().getId());
     }
@@ -46,8 +47,13 @@ public class UserController {
      * @return
      */
     @PutMapping("/mypage")
-    @ResponseBody
     public ResponseEntity<MessageResponseDto> mypageUpdate(@RequestBody UpdateMyPageRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.updateUser(requestDto, userDetails.getUser().getId());
     }
+
+    @PostMapping("/auth/userIdCheck")
+    public ResponseEntity<MessageResponseDto> duplicate(@RequestBody JoinRequestDto requestDto) {
+        return userService.duplicate(requestDto);
+    }
+
 }
