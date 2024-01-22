@@ -3,10 +3,12 @@ package com.project.trybargain.domain.board.entity;
 import com.project.trybargain.domain.user.entity.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class BoardLike {
 
@@ -25,6 +27,14 @@ public class BoardLike {
     private User user;
 
     @NotNull
-    @ColumnDefault("false")
-    private boolean like_yn;
+    private boolean like_yn = false;
+
+    public BoardLike(User user, Board board) {
+        this.user = user;
+        this.board = board;
+    }
+
+    public void changeLike() {
+        this.like_yn = !this.like_yn;
+    }
 }

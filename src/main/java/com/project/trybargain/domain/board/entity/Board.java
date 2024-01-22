@@ -83,5 +83,9 @@ public class Board extends TimeStamp {
     public void delete() {
         this.active_yn = false;
     }
+
+    public void changeLike(int board_like) {
+        this.board_like = board_like;
+    }
 }
 
