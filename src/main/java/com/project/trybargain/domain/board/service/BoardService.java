@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.board.service;
 
+import com.project.trybargain.domain.board.dto.BoardDetailResponseDto;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.entity.Board;
@@ -54,9 +55,9 @@ public class BoardService {
     }
 
     // 게시글 상세
-    public BoardResponseDto getBoard(long id) {
+    public BoardDetailResponseDto getBoard(long id) {
         Board board = findBoard(id);
-        return new BoardResponseDto(board);
+        return new BoardDetailResponseDto(board);
     }
 
     // 게시글 수정

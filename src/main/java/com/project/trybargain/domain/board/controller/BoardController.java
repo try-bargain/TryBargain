@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.board.controller;
 
+import com.project.trybargain.domain.board.dto.BoardDetailResponseDto;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.service.BoardService;
@@ -35,7 +36,7 @@ public class BoardController {
     }
 
     @GetMapping("/board/{id}")
-    public BoardResponseDto getBoard(@PathVariable long id) {
+    public BoardDetailResponseDto getBoard(@PathVariable long id) {
         return boardService.getBoard(id);
     }
 
