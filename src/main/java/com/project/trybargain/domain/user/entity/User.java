@@ -69,6 +69,10 @@ public class User {
         userInfo.addUser(this);
     }
 
+    public void addComment(Comment comment) {
+        this.commentList.add((comment));
+    }
+
     public void addBoardList(Board board) {
         this.boardList.add(board);
     }
