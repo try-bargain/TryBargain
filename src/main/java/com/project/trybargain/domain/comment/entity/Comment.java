@@ -9,7 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -39,8 +40,8 @@ public class Comment extends TimeStamp {
     @JoinColumn(name = "board_id")
     private Board board;
 
-    @OneToOne(mappedBy = "comment", fetch = FetchType.LAZY)
-    private CommentLike commentLike;
+    @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
+    private List<CommentLike> commentLike = new ArrayList<>();
 
     public void addUser(User user) {
         this.user = user;
@@ -56,6 +57,17 @@ public class Comment extends TimeStamp {
         this.content = requestDto.getContent();
     }
 
+    public void updateComment(CommentRequestDto requestDto) {
+        this.content = requestDto.getContent();
+    }
 
+    public void deleteComment() {
+        this.active_yn = false;
+    }
+
+    public void updateLikeCnt(boolean status) {
+        if(status) comment_like--;
+        else comment_like++;
+    }
 
 }
