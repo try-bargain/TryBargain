@@ -5,6 +5,8 @@ import com.project.trybargain.domain.chat.service.ChatService;
 import com.project.trybargain.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,5 +24,10 @@ public class ChatController {
     @PostMapping("/chatRoom")
     public void createRoom(@RequestBody ChatRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         chatService.createRoom(requestDto, userDetails.getUser());
+    }
+
+    @MessageMapping("/sendMessage") // 메시지 밸행, url 앞에 /pub 생략
+    public void sendMessage(@Payload ChatRequestDto requestDto) {
+        chatService.saveMessage(requestDto);
     }
 }

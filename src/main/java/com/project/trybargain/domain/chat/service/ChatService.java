@@ -1,6 +1,7 @@
 package com.project.trybargain.domain.chat.service;
 
 import com.project.trybargain.domain.chat.dto.ChatRequestDto;
+import com.project.trybargain.domain.chat.entity.ChattingMessage;
 import com.project.trybargain.domain.chat.entity.ChattingRoom;
 import com.project.trybargain.domain.chat.repository.ChatMessageRepository;
 import com.project.trybargain.domain.chat.repository.ChatRoomRepository;
@@ -33,10 +34,28 @@ public class ChatService {
         template.convertAndSend("/topic/chatroom/" + chattingRome.getId(), requestDto);
     }
 
+    @Transactional
+    public void saveMessage(ChatRequestDto requestDto) {
+        ChattingRoom chattingRoom = findChattingRoom(requestDto.getRoomId());
+        User user = findUser(requestDto.getUserId());
+
+        ChattingMessage chattingMessage = new ChattingMessage(user, requestDto);
+        chattingMessage.addChattingRoom(chattingRoom);
+        chatMessageRepository.save(chattingMessage);
+
+        requestDto.setWriter(user.getUser_nm());
+        template.convertAndSend("/topic/chatroom/" + requestDto.getRoomId(), requestDto);
+    }
 
     // 유저 검증
     private User findUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 유저는 존재하지 않습니다."));
+    }
+
+    // 채팅방 검증
+    private ChattingRoom findChattingRoom(long id) {
+        return chatRoomRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 채팅방은 존재하지 않습니다."));
     }
 }
