@@ -35,4 +35,9 @@ public class ChatController {
     public List<ChatRoomResponseDto> getRooms(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return chatService.getRooms(userDetails.getUser().getId());
     }
+
+    @GetMapping("/chatRoom/{id}")
+    public ChatRoomResponseDto getRoom(@PathVariable long id) {
+        return chatService.getRoom(id);
+    }
 }

@@ -58,6 +58,12 @@ public class ChatService {
         return chattingRoomList;
     }
 
+    public ChatRoomResponseDto getRoom(long roomId) {
+        ChattingRoom chattingRoom = findChattingRoom(roomId);
+
+        return new ChatRoomResponseDto(chattingRoom);
+    }
+
     // 유저 검증
     private User findUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
