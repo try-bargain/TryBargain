@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.chat.controller;
 
+import com.project.trybargain.domain.chat.dto.ChatMessageResponseDto;
 import com.project.trybargain.domain.chat.dto.ChatRequestDto;
 import com.project.trybargain.domain.chat.dto.ChatRoomResponseDto;
 import com.project.trybargain.domain.chat.service.ChatService;
@@ -39,5 +40,10 @@ public class ChatController {
     @GetMapping("/chatRoom/{id}")
     public ChatRoomResponseDto getRoom(@PathVariable long id) {
         return chatService.getRoom(id);
+    }
+
+    @GetMapping("/chatMessageList/{id}")
+    public List<ChatMessageResponseDto> getMessageList(@PathVariable long id) {
+        return chatService.getMessageList(id);
     }
 }

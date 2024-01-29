@@ -1,5 +1,6 @@
 package com.project.trybargain.domain.chat.service;
 
+import com.project.trybargain.domain.chat.dto.ChatMessageResponseDto;
 import com.project.trybargain.domain.chat.dto.ChatRequestDto;
 import com.project.trybargain.domain.chat.dto.ChatRoomResponseDto;
 import com.project.trybargain.domain.chat.entity.ChattingMessage;
@@ -64,11 +65,21 @@ public class ChatService {
         return new ChatRoomResponseDto(chattingRoom);
     }
 
+    public List<ChatMessageResponseDto> getMessageList(long id) {
+        ChattingRoom chattingRoom = findChattingRoom(id);
+
+        List<ChatMessageResponseDto> ResponseDtoList = chatMessageRepository.findByChattingRoom(chattingRoom).stream().map(ChatMessageResponseDto::new).toList();
+
+        return ResponseDtoList;
+    }
+
     // 유저 검증
     private User findUser(long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new NullPointerException("해당 유저는 존재하지 않습니다."));
     }
+
+
 
     // 채팅방 검증
     private ChattingRoom findChattingRoom(long id) {
