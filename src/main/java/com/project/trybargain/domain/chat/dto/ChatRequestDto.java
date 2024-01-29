@@ -12,8 +12,8 @@ import java.time.ZonedDateTime;
 public class ChatRequestDto {
 
     private long roomId;
-    private long userId;
-    private String writer;
+    private String userId;
+    private String userName;
     private String message;
     private ZonedDateTime time;
 }

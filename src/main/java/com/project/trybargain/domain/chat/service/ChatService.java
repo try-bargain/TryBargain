@@ -29,7 +29,7 @@ public class ChatService {
 
     @Transactional
     public void createRoom(ChatRequestDto requestDto, User user) {
-        User seller = findUser(requestDto.getUserId());
+        User seller = findUserByUserId(requestDto.getUserId());
         ChattingRoom chattingRome = new ChattingRoom(seller, user);
 
         chatRoomRepository.save(chattingRome);
@@ -41,13 +41,13 @@ public class ChatService {
     @Transactional
     public void saveMessage(ChatRequestDto requestDto) {
         ChattingRoom chattingRoom = findChattingRoom(requestDto.getRoomId());
-        User user = findUser(requestDto.getUserId());
+        User user = findUserByUserId(requestDto.getUserId());
 
         ChattingMessage chattingMessage = new ChattingMessage(user, requestDto);
         chattingMessage.addChattingRoom(chattingRoom);
         chatMessageRepository.save(chattingMessage);
 
-        requestDto.setWriter(user.getUser_nm());
+        requestDto.setUserName(user.getUser_nm());
         template.convertAndSend("/topic/chatroom/" + requestDto.getRoomId(), requestDto);
     }
 
@@ -79,7 +79,10 @@ public class ChatService {
                 new NullPointerException("해당 유저는 존재하지 않습니다."));
     }
 
-
+    private User findUserByUserId(String id) {
+        return userRepository.findUserByUserId(id).orElseThrow(() ->
+                new NullPointerException("해당 유저는 존재하지 않습니다."));
+    }
 
     // 채팅방 검증
     private ChattingRoom findChattingRoom(long id) {
