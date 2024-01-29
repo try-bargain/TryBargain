@@ -1,6 +1,7 @@
 package com.project.trybargain.domain.chat.service;
 
 import com.project.trybargain.domain.chat.dto.ChatRequestDto;
+import com.project.trybargain.domain.chat.dto.ChatRoomResponseDto;
 import com.project.trybargain.domain.chat.entity.ChattingMessage;
 import com.project.trybargain.domain.chat.entity.ChattingRoom;
 import com.project.trybargain.domain.chat.repository.ChatMessageRepository;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -45,6 +48,14 @@ public class ChatService {
 
         requestDto.setWriter(user.getUser_nm());
         template.convertAndSend("/topic/chatroom/" + requestDto.getRoomId(), requestDto);
+    }
+
+    public List<ChatRoomResponseDto> getRooms(long userId) {
+        User user = findUser(userId);
+
+        List<ChatRoomResponseDto> chattingRoomList = user.getChatrooms().stream().map(ChatRoomResponseDto::new).toList();
+
+        return chattingRoomList;
     }
 
     // 유저 검증
