@@ -1,12 +1,10 @@
 package com.project.trybargain.domain.user.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
-import com.project.trybargain.domain.chat.entity.ChattingMessage;
-import com.project.trybargain.domain.chat.entity.ChattingRome;
+import com.project.trybargain.domain.chat.entity.ChattingRoom;
 import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
-import com.project.trybargain.global.config.WebSecurityConfig;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -42,7 +40,7 @@ public class User {
     private UserRoleEnum user_role = UserRoleEnum.USER;
 
     @OneToMany(mappedBy = "user")
-    private List<Board> board = new ArrayList<>();
+    private List<Board> boardList = new ArrayList<>();
 
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private UserInfo userInfo;
@@ -50,12 +48,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<ChattingRome> chattingRome = new ArrayList<>();
+    @OneToMany(mappedBy = "seller")
+    private List<ChattingRoom> sellerChattingRome = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user")
-    private List<ChattingMessage> chattingMessages = new ArrayList<>();
-
+    @OneToMany(mappedBy = "buyer")
+    private List<ChattingRoom> buyerChattingRome = new ArrayList<>();
 
     public User(JoinRequestDto requestDto) {
         this.user_id = requestDto.getUser_id();
@@ -69,9 +66,23 @@ public class User {
         userInfo.addUser(this);
     }
 
+    public void addComment(Comment comment) {
+        this.commentList.add((comment));
+    }
+
+    public void addBoardList(Board board) {
+        this.boardList.add(board);
+    }
+  
     public void update(UpdateMyPageRequestDto requestDto) {
         this.user_nm = requestDto.getUser_nm();
         this.email = requestDto.getEmail();
         this.userInfo.update(requestDto);
+    }
+
+    public List<ChattingRoom> getChatrooms() {
+        List<ChattingRoom> chattingRoomList = new ArrayList<>(this.sellerChattingRome);
+        chattingRoomList.addAll(this.buyerChattingRome);
+        return chattingRoomList;
     }
 }

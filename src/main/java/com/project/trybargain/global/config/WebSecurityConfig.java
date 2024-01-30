@@ -19,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
@@ -46,6 +48,22 @@ public class WebSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    // CORS
+    @Bean
+    public CorsConfigurationSource configurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList(JwtUtil.AUTHORIZATION_HEADER, "Cache-Control", "Content-Type"));
+        configuration.setExposedHeaders(Arrays.asList(JwtUtil.AUTHORIZATION_HEADER));
+        configuration.setMaxAge(1800L);
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
     // 로그인 필터
     @Bean
@@ -67,6 +85,9 @@ public class WebSecurityConfig {
         // CSRF 설정
         http.csrf((csrf) -> csrf.disable());
 
+        //CORS 설정
+        http.cors((cors) -> cors.configurationSource(configurationSource()));
+
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         http.sessionManagement((sessionManagement) ->
                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -75,6 +96,7 @@ public class WebSecurityConfig {
                 authorizeHttpRequests
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/auth/**").permitAll() // '/api/auth/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers(HttpMethod.GET, "/api/board/**").permitAll() // '게시물 조회 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
         );
 

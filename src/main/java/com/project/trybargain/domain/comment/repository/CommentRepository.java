@@ -17,10 +17,12 @@ public class CommentRepository {
     }
 
     public Optional<Comment> findById(long id) {
-        return  Optional.ofNullable(em.find(Comment.class, id));
+        return em.createQuery("select c from Comment  c where c.active_yn = true and c.id = :id", Comment.class)
+                .setParameter("id", id)
+                .getResultList()
+                .stream()
+                .findAny();
     }
-
-
 
 
 }

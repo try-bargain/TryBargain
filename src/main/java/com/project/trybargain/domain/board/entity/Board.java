@@ -1,6 +1,5 @@
 package com.project.trybargain.domain.board.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.user.entity.User;
@@ -9,7 +8,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,18 +34,16 @@ public class Board extends TimeStamp {
     private int board_like;
 
     @NotNull
-    @ColumnDefault("true")
-    private boolean active_yn;
+    private boolean active_yn = true;
 
     @NotNull
     @Enumerated(value = EnumType.STRING)
     private BoardStatusEnum status = BoardStatusEnum.ING;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -55,8 +51,8 @@ public class Board extends TimeStamp {
     @OneToMany(mappedBy = "board")
     private List<Comment> commentList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "board", fetch = FetchType.LAZY)
-    private BoardLike boardLike;
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
+    private List<BoardLike> boardLikeList = new ArrayList<>();
 
     public Board(BoardRequestDto requestDto) {
         this.title = requestDto.getTitle();
@@ -66,10 +62,34 @@ public class Board extends TimeStamp {
 
     public void addUser(User user) {
         this.user = user;
+        user.addBoardList(this);
     }
+
+    public void addComment(Comment comment) {
+        commentList.add(comment);
+    }
+
 
     public void addCategory(Category category) {
         this.category = category;
+    }
+
+    public void update(BoardRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.contents = requestDto.getContents();
+        this.price = requestDto.getPrice();
+    }
+
+    public void delete() {
+        this.active_yn = false;
+    }
+
+    public void changeLike(int board_like) {
+        this.board_like = board_like;
+    }
+
+    public void changeStatus(BoardStatusEnum status) {
+        this.status = status;
     }
 }
 

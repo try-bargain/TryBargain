@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class UpdateMyPageRequestDto {
-    private String user_id;
     private String user_nm;
     private String email;
 
@@ -19,7 +18,6 @@ public class UpdateMyPageRequestDto {
     private String address2;
 
     public UpdateMyPageRequestDto(User user) {
-        this.user_id = user.getUser_id();
         this.user_nm = user.getUser_nm();
         this.email = user.getEmail();
         this.htel = user.getUserInfo().getHtel();

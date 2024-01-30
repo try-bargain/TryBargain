@@ -1,14 +1,18 @@
 package com.project.trybargain.domain.board.dto;
 
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.comment.dto.CommentResponseDto;
+import com.project.trybargain.domain.comment.entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
-public class BoardResponseDto {
+public class BoardDetailResponseDto {
     private Long id;
     private String title;
     private String contents;
@@ -18,8 +22,9 @@ public class BoardResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private CategoryResponseDto category;
+    private List<CommentResponseDto> commentList = new ArrayList<>();
 
-    public BoardResponseDto(Board board) {
+    public BoardDetailResponseDto(Board board) {
         this.id = board.getId();
         this.title = board.getTitle();
         this.contents = board.getContents();
@@ -29,5 +34,13 @@ public class BoardResponseDto {
         this.createdAt = board.getCreated_at();
         this.updatedAt = board.getUpdated_at();
         this.category = new CategoryResponseDto(board.getCategory());
+
+        for (Comment comment : board.getCommentList()) {
+            if(comment.isActive_yn()) {
+                this.commentList.add(new CommentResponseDto(comment));
+            }
+        }
     }
+
+
 }
