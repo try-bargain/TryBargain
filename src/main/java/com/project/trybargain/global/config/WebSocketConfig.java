@@ -10,15 +10,11 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    /**
-     * sockJS Fallback을 이용해 노출할 endpoint 설정
-     * webSocket을 지원하지 않는 브라우저에서 http의 polling과 같은 방식으로 websocket의 요청을 수행하도록 도와준다.
-     * sockJS를 사용할 경우, 요청을 보낼 때 - 설정한 endpoint/websocket 으로 작동한다.
-     * @param registry
-     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 웹 소켓이 handshake를 하기 위해 연결하는 endpoint
+        // sockJS Fallback 옵션 활성화
+        // sockJS를 사용할 경우, 요청을 보낼 때 - 설정한 endpoint/websocket 으로 작동한다.
         registry.addEndpoint("/chat")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
@@ -27,12 +23,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // 메시지 브로커 설정
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        // 서버 -> 클라이언트로 발행하는 메시지에 대한 endpoint 설정 : 구독
-//        registry.enableSimpleBroker("/sub");
-        registry.enableSimpleBroker("/topic", "/queue");
+        // 웹소켓을 통해 보내진 메시지를 가저오기 위한 주소 설정
+        registry.enableSimpleBroker("/topic");
 
-        // 클라이언트 -> 서버로 발행하는 메시지에 대한 endpoint 설정 : 구독에 대한 메시지
-//        registry.setApplicationDestinationPrefixes("/pub");
+        // 클라이언트에서 서버로 메시지를 보내기 위한 주소 설정
         registry.setApplicationDestinationPrefixes("/app");
     }
 }

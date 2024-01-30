@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -15,5 +16,5 @@ public class ChatRequestDto {
     private String userId;
     private String userName;
     private String message;
-    private ZonedDateTime time;
+    private LocalDateTime time;
 }

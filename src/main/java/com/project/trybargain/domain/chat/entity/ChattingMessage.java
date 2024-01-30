@@ -5,9 +5,8 @@ import com.project.trybargain.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -26,10 +25,7 @@ public class ChattingMessage {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @CreatedDate
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private ZonedDateTime time;
+    private LocalDateTime time;
 
     private String content;
 

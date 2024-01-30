@@ -26,6 +26,8 @@ public class ChattingRoom {
     @JoinColumn(name = "buyer_id")
     private User buyer;
 
+    private boolean state = true;
+
     @OneToMany(mappedBy = "chattingRoom")
     private List<ChattingMessage> chattingMessage = new ArrayList<>();
 
@@ -36,5 +38,9 @@ public class ChattingRoom {
 
     public void addMessage(ChattingMessage message) {
         this.chattingMessage.add(message);
+    }
+
+    public void changeState() {
+        this.state = !this.state;
     }
 }
