@@ -25,16 +25,20 @@ public class RedisConfig {
 
     @Bean
     public RedisTemplate<?, ?> redisTemplate() {
+        // template를 주입할 때 자료형을 지정하기 위해 <?, ?>로 한다.
         RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory());
 
         // JSON 포맷으로 데이터를 저장하는 경우
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-//        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
-        redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
 
         // 일반적인 key:value일 때
         redisTemplate.setDefaultSerializer(new StringRedisSerializer());
+
+        // Hash를 사용할 경우
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.setHashValueSerializer(new GenericJackson2JsonRedisSerializer());
 
         return redisTemplate;
     }
