@@ -14,6 +14,7 @@ import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.domain.user.entity.UserRoleEnum;
 import com.project.trybargain.domain.user.repository.UserRepository;
 import com.project.trybargain.global.dto.MessageResponseDto;
+import com.project.trybargain.global.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,7 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final CategoryRepository categoryRepository;
     private final BoardLikeRepository boardLikeRepository;
+    private final RedisRepository redisRepository;
 
     // 게시글 등록
     @Transactional
@@ -89,28 +92,40 @@ public class BoardService {
     }
 
     // 게시글 좋아요
-    @Transactional
+//    @Transactional
     public ResponseEntity<MessageResponseDto> likeBoard(long id, long userId) {
         Board board = findBoard(id);
         User user = findUser(userId);
 
-        BoardLike boardLike = boardLikeRepository.findByUserAndBoard(user, board).orElse(null);
-        if (boardLike == null) {
-            boardLike = new BoardLike(user, board);
-            boardLikeRepository.save(boardLike);
-        }
+        Set<Object> boardLikeList = redisRepository.getSetValues("board:like:" + board.getId());
 
-        if (boardLike.isLike_yn()) {
-            board.changeLike(board.getBoard_like() - 1);
-            boardLike.changeLike();
+        if (boardLikeList.contains(user.getId() + "")) {
+            redisRepository.deleteSetValue("board:like:" + board.getId(), user.getId() + "");
             MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 취소하였습니다.",200);
             return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
         }
 
-        board.changeLike(board.getBoard_like() + 1);
-        boardLike.changeLike();
+        redisRepository.saveSet("board:like:" + board.getId(), user.getId() + "");
         MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 성공하였습니다.",200);
         return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+
+//        BoardLike boardLike = boardLikeRepository.findByUserAndBoard(user, board).orElse(null);
+//        if (boardLike == null) {
+//            boardLike = new BoardLike(user, board);
+//            boardLikeRepository.save(boardLike);
+//        }
+//
+//        if (boardLike.isLike_yn()) {
+//            board.changeLike(board.getBoard_like() - 1);
+//            boardLike.changeLike();
+//            MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 취소하였습니다.",200);
+//            return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+//        }
+//
+//        board.changeLike(board.getBoard_like() + 1);
+//        boardLike.changeLike();
+//        MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 성공하였습니다.",200);
+//        return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
     }
 
     // 게시글 상태 변경
