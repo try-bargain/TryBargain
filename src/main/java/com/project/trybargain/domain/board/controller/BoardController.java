@@ -7,6 +7,9 @@ import com.project.trybargain.domain.board.service.BoardService;
 import com.project.trybargain.global.dto.MessageResponseDto;
 import com.project.trybargain.global.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +29,10 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public List<BoardResponseDto> getBoards() {
-        return boardService.getBoards();
+    public Page<BoardResponseDto> getBoards(@RequestParam(value = "page", defaultValue = "1") int page,
+                                            @RequestParam(value = "size", defaultValue = "10") int size,
+                                            @PageableDefault Pageable pageable) {
+        return boardService.getBoards(pageable);
     }
 
     @GetMapping("/board/search")

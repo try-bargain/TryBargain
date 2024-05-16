@@ -4,7 +4,6 @@ import com.project.trybargain.domain.board.dto.BoardDetailResponseDto;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.entity.Board;
-import com.project.trybargain.domain.board.entity.BoardLike;
 import com.project.trybargain.domain.board.entity.BoardStatusEnum;
 import com.project.trybargain.domain.board.entity.Category;
 import com.project.trybargain.domain.board.repository.BoardLikeRepository;
@@ -16,6 +15,9 @@ import com.project.trybargain.domain.user.repository.UserRepository;
 import com.project.trybargain.global.dto.MessageResponseDto;
 import com.project.trybargain.global.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -51,9 +53,13 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
-    // 조회 상위 100개 - 추후 무한 스크롤링으로 처리 예정
-    public List<BoardResponseDto> getBoards() {
-        return boardRepository.findAllByTop100().stream().map(BoardResponseDto::new).toList();
+    // 조회 상위 10개 - 추후 무한 스크롤링으로 처리 예정
+    public Page<BoardResponseDto> getBoards(Pageable pageable) {
+        List<BoardResponseDto> list = boardRepository.findAll(pageable.getPageNumber(), pageable.getPageSize()).stream().map(BoardResponseDto::new).toList();
+        long totalElements = boardRepository.countBoard();
+        int totalPages = (int) Math.ceil(1.0 * totalElements / pageable.getPageSize());
+
+        return new PageImpl<>(list, pageable, totalPages);
     }
 
     // 게시물 검색
