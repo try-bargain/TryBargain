@@ -55,16 +55,18 @@ public class BoardService {
 
     // 조회 상위 10개 - 추후 무한 스크롤링으로 처리 예정
     public Page<BoardResponseDto> getBoards(Pageable pageable) {
-        List<BoardResponseDto> list = boardRepository.findAll(pageable.getPageNumber(), pageable.getPageSize()).stream().map(BoardResponseDto::new).toList();
-        long totalElements = boardRepository.countBoard();
-        int totalPages = (int) Math.ceil(1.0 * totalElements / pageable.getPageSize());
+        List<BoardResponseDto> list = boardRepository.findAll(pageable).stream().map(BoardResponseDto::new).toList();
+        long totalElements = boardRepository.countBoards();
 
-        return new PageImpl<>(list, pageable, totalPages);
+        return new PageImpl<>(list, pageable, totalElements);
     }
 
     // 게시물 검색
-    public List<BoardResponseDto> searchBoards(String query) {
-        return boardRepository.findAllByTitle(query).stream().map(BoardResponseDto::new).toList();
+    public Page<BoardResponseDto> searchBoards(String query, Pageable pageable) {
+        List<BoardResponseDto> list = boardRepository.findAllByTitle(query, pageable).stream().map(BoardResponseDto::new).toList();
+        long totalElements = boardRepository.countSearchBoards(query);
+
+        return new PageImpl<>(list, pageable, totalElements);
     }
 
     // 게시글 상세

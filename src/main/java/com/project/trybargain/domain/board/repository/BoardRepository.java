@@ -3,7 +3,7 @@ package com.project.trybargain.domain.board.repository;
 import com.project.trybargain.domain.board.entity.Board;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -19,25 +19,34 @@ public class BoardRepository {
         em.persist(board);
     }
 
-    public List<Board> findAll(int page, int size) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b join fetch b.category c WHERE b.active_yn = true", Board.class)
-                .setFirstResult(page)
-                .setMaxResults(size)
+    public List<Board> findAll(Pageable pageable) {
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b JOIN FETCH b.category c WHERE b.active_yn = true", Board.class)
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
         return boardList;
     }
 
-    public long countBoard() {
-        Long count = em.createQuery("SELECT COUNT(b) FROM Board b", Long.class)
+    public long countBoards() {
+        Long count = em.createQuery("SELECT COUNT(b) FROM Board b WHERE b.active_yn = true", Long.class)
                 .getSingleResult();
         return count;
     }
 
-    public List<Board> findAllByTitle(String query) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.title LIKE :query AND b.active_yn = true", Board.class)
+    public List<Board> findAllByTitle(String query, Pageable pageable) {
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b JOIN FETCH b.category c WHERE b.title LIKE :query AND b.active_yn = true", Board.class)
+                .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
+                .setMaxResults(pageable.getPageSize())
                 .setParameter("query", "%"+query+"%")
                 .getResultList();
         return boardList;
+    }
+
+    public long countSearchBoards(String query) {
+        Long count = em.createQuery("SELECT COUNT(b) FROM Board b WHERE b.title LIKE :query AND b.active_yn = true", Long.class)
+                .setParameter("query", "%"+query+"%")
+                .getSingleResult();
+        return count;
     }
 
     public Optional<Board> findById(long id) {

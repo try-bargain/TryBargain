@@ -29,15 +29,14 @@ public class BoardController {
     }
 
     @GetMapping("/board")
-    public Page<BoardResponseDto> getBoards(@RequestParam(value = "page", defaultValue = "1") int page,
-                                            @RequestParam(value = "size", defaultValue = "10") int size,
-                                            @PageableDefault Pageable pageable) {
+    public Page<BoardResponseDto> getBoards(@PageableDefault Pageable pageable) {
         return boardService.getBoards(pageable);
     }
 
     @GetMapping("/board/search")
-    public List<BoardResponseDto> searchBoards(@RequestParam(value = "query") String query) {
-        return boardService.searchBoards(query);
+    public Page<BoardResponseDto> searchBoards(@RequestParam(value = "query") String query,
+                                               @PageableDefault Pageable pageable) {
+        return boardService.searchBoards(query, pageable);
     }
 
     @GetMapping("/board/{id}")
