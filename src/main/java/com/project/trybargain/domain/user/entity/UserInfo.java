@@ -4,19 +4,19 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.sql.Update;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserInfo {
 
     @Id
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
-    private User user;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     private String htel;
 
@@ -46,9 +46,5 @@ public class UserInfo {
         this.post = requestDto.getPost();
         this.address1 = requestDto.getAddress1();
         this.address2 = requestDto.getAddress2();
-    }
-
-    public void addUser(User user) {
-        this.user = user;
     }
 }

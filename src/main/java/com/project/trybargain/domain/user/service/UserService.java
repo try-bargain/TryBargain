@@ -53,8 +53,7 @@ public class UserService {
         }
 
         UserInfo userInfo = new UserInfo(joinRequestDto);
-        User user = new User(joinRequestDto);
-        user.addUserInfo(userInfo);
+        User user = new User(joinRequestDto, userInfo);
 
         userRepository.save(user);
         MessageResponseDto responseEntity = new MessageResponseDto("join complete",200);

@@ -28,7 +28,8 @@ public class UserRepository {
      * @return
      */
     public Optional<User> findUserByUserId(String userId) {
-        List<User> findUser = em.createQuery("select u from User u where u.user_id = :userId", User.class)
+        List<User> findUser = em.createQuery("select u from User u " +
+                        "where u.user_id = :userId", User.class)
                 .setParameter("userId", userId).getResultList();
         return findUser.stream().findAny();
     }
@@ -40,7 +41,8 @@ public class UserRepository {
      * @return
      */
     public Optional<User> findUserByEmail(String email) {
-        List<User> findUser = em.createQuery("select u from User u where u.email = :email", User.class)
+        List<User> findUser = em.createQuery("select u from User u " +
+                        "where u.email = :email", User.class)
                 .setParameter("email", email).getResultList();
         return findUser.stream().findAny();
     }
@@ -51,7 +53,8 @@ public class UserRepository {
      * @return
      */
     public Optional<User> findUserByName(String user_nm) {
-        List<User> findUser = em.createQuery("select u from User u where u.user_nm = :user_nm", User.class)
+        List<User> findUser = em.createQuery("select u from User u " +
+                        "where u.user_nm = :user_nm", User.class)
                 .setParameter("user_nm", user_nm).getResultList();
         return findUser.stream().findAny();
 
