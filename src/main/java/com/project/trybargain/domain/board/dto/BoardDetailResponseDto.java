@@ -2,7 +2,6 @@ package com.project.trybargain.domain.board.dto;
 
 import com.project.trybargain.domain.board.entity.Board;
 import com.project.trybargain.domain.comment.dto.CommentResponseDto;
-import com.project.trybargain.domain.comment.entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -34,13 +33,9 @@ public class BoardDetailResponseDto {
         this.createdAt = board.getCreated_at();
         this.updatedAt = board.getUpdated_at();
         this.category = new CategoryResponseDto(board.getCategory());
-
-        for (Comment comment : board.getCommentList()) {
-            if(comment.isActive_yn()) {
-                this.commentList.add(new CommentResponseDto(comment));
-            }
-        }
     }
 
-
+    public void commentListAdd(CommentResponseDto commentResponseDto) {
+        commentList.add(commentResponseDto);
+    }
 }

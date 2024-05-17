@@ -50,7 +50,6 @@ public class Comment extends TimeStamp {
 
     public void addBoard(Board board) {
         this.board = board;
-        board.addComment(this);
     }
 
     public Comment(CommentRequestDto requestDto) {
@@ -66,8 +65,7 @@ public class Comment extends TimeStamp {
     }
 
     public void updateLikeCnt(boolean status) {
-        if(status) comment_like--;
+        if (status) comment_like--;
         else comment_like++;
     }
-
 }

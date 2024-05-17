@@ -5,6 +5,7 @@ import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -17,7 +18,8 @@ public class CommentRepository {
     }
 
     public Optional<Comment> findById(long id) {
-        return em.createQuery("select c from Comment  c where c.active_yn = true and c.id = :id", Comment.class)
+        return em.createQuery("select c from Comment c " +
+                        "where c.active_yn = true and c.id = :id", Comment.class)
                 .setParameter("id", id)
                 .getResultList()
                 .stream()
@@ -25,4 +27,11 @@ public class CommentRepository {
     }
 
 
+    public List<Comment> findByBoardId(long boardId) {
+        return em.createQuery("select c from Comment c " +
+                        "join fetch c.user u " +
+                        "where c.board.id = :boardId and c.active_yn = true", Comment.class)
+                .setParameter("boardId", boardId)
+                .getResultList();
+    }
 }

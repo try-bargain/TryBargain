@@ -34,43 +34,43 @@ public class CommentService {
 
     public CommentResponseDto createComment(CommentRequestDto requestDto, long boardNo, User user) {
         Comment comment = new Comment(requestDto);
-        User selectUser = userRepository.findById(user.getId()).orElseThrow(() -> new NullPointerException("해당 유저는 없습니다."));
+        User selectUser = findUser(user.getId());
         comment.addUser(selectUser);
 
-        Board board = boardRepository.findById(boardNo).orElseThrow(() -> new NullPointerException("해당 게시글은 없습니다."));
+        Board board = findBoard(boardNo);
         comment.addBoard(board);
 
         commentRepository.save(comment);
-        return new CommentResponseDto(comment);
+        return new CommentResponseDto(comment, selectUser.getUser_id());
     }
 
 
     public CommentResponseDto updateComment(CommentRequestDto requestDto, long commentId, User user) {
-        Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new NullPointerException("해당 댓글은 없습니다."));
+        Comment findComment = findComment(commentId);
 
         if(user.getId() != findComment.getUser().getId()) {
             throw new BadCredentialsException("댓글작성자만 수정할 수 있습니다.");
         }
 
         findComment.updateComment(requestDto);
-        return new CommentResponseDto(findComment);
+        return new CommentResponseDto(findComment, user.getUser_id());
     }
 
     public CommentResponseDto deleteComment(long commentId, User user) {
-        Comment findComment = commentRepository.findById(commentId).orElseThrow(() -> new NullPointerException("해당 댓글은 없습니다."));
+        Comment findComment = findComment(commentId);
 
         if(user.getId() != findComment.getUser().getId()) {
             throw new BadCredentialsException("댓글작성자만 삭제할 수 있습니다.");
         }
 
         findComment.deleteComment();
-        return new CommentResponseDto(findComment);
+        return new CommentResponseDto(findComment, user.getUser_id());
     }
 
     public ResponseEntity<MessageResponseDto> updateCommentLike(long commentNo, User user) {
 
-        User findUser = userRepository.findById(user.getId()).orElseThrow(() -> new NullPointerException("해당 유저는 없습니다."));
-        Comment comment = commentRepository.findById(commentNo).orElseThrow(() -> new NullPointerException("해당 댓글은 없습니다."));
+        User findUser = findUser(user.getId());
+        Comment comment = findComment(commentNo);
 
         Set<Object> commentLikeList = redisRepository.getSetValues("comment:like:" + comment.getId());
 
@@ -96,5 +96,20 @@ public class CommentService {
 
 //        MessageResponseDto responseEntity = new MessageResponseDto("게시글 상태를 변경하였습니다.",200);
 //        return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+    }
+
+    private User findUser(long id) {
+        return userRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 유저는 존재하지 않습니다."));
+    }
+
+    private Board findBoard(long id) {
+        return boardRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 게시글은 존재하지 않습니다."));
+    }
+
+    private Comment findComment(long id) {
+        return commentRepository.findById(id).orElseThrow(() ->
+                new NullPointerException("해당 댓글은 존재하지 않습니다."));
     }
 }

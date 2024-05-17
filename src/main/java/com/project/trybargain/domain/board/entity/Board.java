@@ -6,6 +6,7 @@ import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.global.entity.TimeStamp;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board extends TimeStamp {
 
     @Id
@@ -40,16 +41,13 @@ public class Board extends TimeStamp {
     @Enumerated(value = EnumType.STRING)
     private BoardStatusEnum status = BoardStatusEnum.ING;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(mappedBy = "board")
-    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY)
     private List<BoardLike> boardLikeList = new ArrayList<>();
@@ -64,11 +62,6 @@ public class Board extends TimeStamp {
         this.user = user;
         user.addBoardList(this);
     }
-
-    public void addComment(Comment comment) {
-        commentList.add(comment);
-    }
-
 
     public void addCategory(Category category) {
         this.category = category;

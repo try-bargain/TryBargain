@@ -9,6 +9,9 @@ import com.project.trybargain.domain.board.entity.Category;
 import com.project.trybargain.domain.board.repository.BoardLikeRepository;
 import com.project.trybargain.domain.board.repository.BoardRepository;
 import com.project.trybargain.domain.board.repository.CategoryRepository;
+import com.project.trybargain.domain.comment.dto.CommentResponseDto;
+import com.project.trybargain.domain.comment.entity.Comment;
+import com.project.trybargain.domain.comment.repository.CommentRepository;
 import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.domain.user.entity.UserRoleEnum;
 import com.project.trybargain.domain.user.repository.UserRepository;
@@ -36,6 +39,7 @@ public class BoardService {
     private final CategoryRepository categoryRepository;
     private final BoardLikeRepository boardLikeRepository;
     private final RedisRepository redisRepository;
+    private final CommentRepository commentRepository;
 
     // 게시글 등록
     @Transactional
@@ -72,7 +76,19 @@ public class BoardService {
     // 게시글 상세
     public BoardDetailResponseDto getBoard(long id) {
         Board board = findBoard(id);
-        return new BoardDetailResponseDto(board);
+
+        BoardDetailResponseDto boardDetailResponseDto = new BoardDetailResponseDto(board);
+
+        List<Comment> comments = commentRepository.findByBoardId(board.getId());
+        List<CommentResponseDto> commentResponseDto = comments.stream()
+                .map(CommentResponseDto::new)
+                .toList();
+
+        for (CommentResponseDto comment : commentResponseDto) {
+            boardDetailResponseDto.commentListAdd(comment);
+        }
+
+        return boardDetailResponseDto;
     }
 
     // 게시글 수정
@@ -80,7 +96,6 @@ public class BoardService {
     public BoardResponseDto updateBoard(long id, BoardRequestDto requestDto, User user) {
         Board board = findBoard(id);
 
-        System.out.println("수정엉");
         checkUser(board, user);
         board.update(requestDto);
 

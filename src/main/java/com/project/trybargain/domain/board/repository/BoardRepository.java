@@ -20,7 +20,9 @@ public class BoardRepository {
     }
 
     public List<Board> findAll(Pageable pageable) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b JOIN FETCH b.category c WHERE b.active_yn = true", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
+                        "JOIN FETCH b.category c " +
+                        "WHERE b.active_yn = true", Board.class)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .getResultList();
@@ -28,13 +30,16 @@ public class BoardRepository {
     }
 
     public long countBoards() {
-        Long count = em.createQuery("SELECT COUNT(b) FROM Board b WHERE b.active_yn = true", Long.class)
+        Long count = em.createQuery("SELECT COUNT(b) FROM Board b " +
+                        "WHERE b.active_yn = true", Long.class)
                 .getSingleResult();
         return count;
     }
 
     public List<Board> findAllByTitle(String query, Pageable pageable) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b JOIN FETCH b.category c WHERE b.title LIKE :query AND b.active_yn = true", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
+                        "JOIN FETCH b.category c " +
+                        "WHERE b.title LIKE :query AND b.active_yn = true", Board.class)
                 .setFirstResult(pageable.getPageNumber() * pageable.getPageSize())
                 .setMaxResults(pageable.getPageSize())
                 .setParameter("query", "%"+query+"%")
@@ -43,14 +48,17 @@ public class BoardRepository {
     }
 
     public long countSearchBoards(String query) {
-        Long count = em.createQuery("SELECT COUNT(b) FROM Board b WHERE b.title LIKE :query AND b.active_yn = true", Long.class)
+        Long count = em.createQuery("SELECT COUNT(b) FROM Board b " +
+                        "WHERE b.title LIKE :query AND b.active_yn = true", Long.class)
                 .setParameter("query", "%"+query+"%")
                 .getSingleResult();
         return count;
     }
 
     public Optional<Board> findById(long id) {
-        List<Board> boardList = em.createQuery("SELECT b FROM Board b WHERE b.id = :id AND b.active_yn = true", Board.class)
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
+                        "JOIN FETCH b.category c " +
+                        "WHERE b.id = :id AND b.active_yn = true", Board.class)
                 .setParameter("id", id)
                 .getResultList();
         return boardList.stream().findAny();
