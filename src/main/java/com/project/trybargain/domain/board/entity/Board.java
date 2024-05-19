@@ -84,5 +84,10 @@ public class Board extends TimeStamp {
     public void changeStatus(BoardStatusEnum status) {
         this.status = status;
     }
+
+    public void addLikeList(BoardLike boardLike) {
+        this.boardLikeList.add(boardLike);
+        boardLike.addBoard(this);
+    }
 }
 

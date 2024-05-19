@@ -19,7 +19,7 @@ public class RedisRepository {
         valueOperations.set(key, value);
     }
 
-    public void saveSet(String key, String value) {
+    public void saveSet(String key, long value) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         setOperations.add(key, value);
     }
@@ -34,7 +34,12 @@ public class RedisRepository {
         return setOperations.members(key);
     }
 
-    public void deleteSetValue(String key, String value) {
+    public Boolean isEmptySetValue(String key, long value) {
+        SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
+        return setOperations.isMember(key, value);
+    }
+
+    public void deleteSetValue(String key, long value) {
         SetOperations<String, Object> setOperations = redisTemplate.opsForSet();
         setOperations.remove(key, value);
     }

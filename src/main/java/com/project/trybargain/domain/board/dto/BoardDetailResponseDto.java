@@ -4,12 +4,14 @@ import com.project.trybargain.domain.board.entity.Board;
 import com.project.trybargain.domain.comment.dto.CommentResponseDto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class BoardDetailResponseDto {
     private Long id;

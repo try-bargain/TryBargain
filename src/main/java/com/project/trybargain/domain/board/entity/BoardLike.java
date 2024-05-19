@@ -29,12 +29,16 @@ public class BoardLike {
     @NotNull
     private boolean like_yn = false;
 
-    public BoardLike(User user, Board board) {
-        this.user = user;
+    public BoardLike(Board board, User user) {
         this.board = board;
+        this.user = user;
     }
 
     public void changeLike() {
         this.like_yn = !this.like_yn;
+    }
+
+    public void addBoard(Board board) {
+        this.board = board;
     }
 }

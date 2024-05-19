@@ -19,6 +19,13 @@ public class BoardRepository {
         em.persist(board);
     }
 
+    public List<Board> findAllBydifBoardLike() {
+        List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
+                        "WHERE b.active_yn = true", Board.class)
+                .getResultList();
+        return boardList;
+    }
+
     public List<Board> findAll(Pageable pageable) {
         List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
                         "JOIN FETCH b.category c " +

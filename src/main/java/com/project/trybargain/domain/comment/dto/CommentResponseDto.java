@@ -3,8 +3,10 @@ package com.project.trybargain.domain.comment.dto;
 import com.project.trybargain.domain.comment.entity.Comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class CommentResponseDto {
     private long commentId;

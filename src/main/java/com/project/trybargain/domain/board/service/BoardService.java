@@ -4,6 +4,7 @@ import com.project.trybargain.domain.board.dto.BoardDetailResponseDto;
 import com.project.trybargain.domain.board.dto.BoardRequestDto;
 import com.project.trybargain.domain.board.dto.BoardResponseDto;
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.board.entity.BoardLike;
 import com.project.trybargain.domain.board.entity.BoardStatusEnum;
 import com.project.trybargain.domain.board.entity.Category;
 import com.project.trybargain.domain.board.repository.BoardLikeRepository;
@@ -62,6 +63,13 @@ public class BoardService {
         List<BoardResponseDto> list = boardRepository.findAll(pageable).stream().map(BoardResponseDto::new).toList();
         long totalElements = boardRepository.countBoards();
 
+        for (BoardResponseDto boardResponseDto : list) {
+            Set<Object> boardLikeList = redisRepository.getSetValues("board:like:" + boardResponseDto.getId());
+            if (!boardLikeList.isEmpty()) {
+                boardResponseDto.setBoardLike(boardLikeList.size());
+            }
+        }
+
         return new PageImpl<>(list, pageable, totalElements);
     }
 
@@ -69,6 +77,13 @@ public class BoardService {
     public Page<BoardResponseDto> searchBoards(String query, Pageable pageable) {
         List<BoardResponseDto> list = boardRepository.findAllByTitle(query, pageable).stream().map(BoardResponseDto::new).toList();
         long totalElements = boardRepository.countSearchBoards(query);
+
+        for (BoardResponseDto boardResponseDto : list) {
+            Set<Object> boardLikeList = redisRepository.getSetValues("board:like:" + boardResponseDto.getId());
+            if (!boardLikeList.isEmpty()) {
+                boardResponseDto.setBoardLike(boardLikeList.size());
+            }
+        }
 
         return new PageImpl<>(list, pageable, totalElements);
     }
@@ -85,7 +100,16 @@ public class BoardService {
                 .toList();
 
         for (CommentResponseDto comment : commentResponseDto) {
+            Set<Object> commentLikeList = redisRepository.getSetValues("comment:like:" + comment.getCommentId());
+            if (!commentLikeList.isEmpty()) {
+                comment.setLikeCnt(commentLikeList.size());
+            }
             boardDetailResponseDto.commentListAdd(comment);
+        }
+
+        Set<Object> boardLikeList = redisRepository.getSetValues("board:like:" + board.getId());
+        if (!boardLikeList.isEmpty()) {
+            boardDetailResponseDto.setBoardLike(boardLikeList.size());
         }
 
         return boardDetailResponseDto;
@@ -120,15 +144,13 @@ public class BoardService {
         Board board = findBoard(id);
         User user = findUser(userId);
 
-        Set<Object> boardLikeList = redisRepository.getSetValues("board:like:" + board.getId());
-
-        if (boardLikeList.contains(user.getId() + "")) {
-            redisRepository.deleteSetValue("board:like:" + board.getId(), user.getId() + "");
+        if (redisRepository.isEmptySetValue("board:like:" + board.getId(), user.getId())) {
+            redisRepository.deleteSetValue("board:like:" + board.getId(), user.getId());
             MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 취소하였습니다.",200);
             return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
         }
 
-        redisRepository.saveSet("board:like:" + board.getId(), user.getId() + "");
+        redisRepository.saveSet("board:like:" + board.getId(), user.getId());
         MessageResponseDto responseEntity = new MessageResponseDto("게시글 좋아요를 성공하였습니다.",200);
         return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
 

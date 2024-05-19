@@ -72,15 +72,13 @@ public class CommentService {
         User findUser = findUser(user.getId());
         Comment comment = findComment(commentNo);
 
-        Set<Object> commentLikeList = redisRepository.getSetValues("comment:like:" + comment.getId());
-
-        if (commentLikeList.contains(findUser.getId() + "")) {
-            redisRepository.deleteSetValue("comment:like:" + comment.getId(), findUser.getId() + "");
+        if (redisRepository.isEmptySetValue("comment:like:" + comment.getId(), findUser.getId())) {
+            redisRepository.deleteSetValue("comment:like:" + comment.getId(), findUser.getId());
             MessageResponseDto responseEntity = new MessageResponseDto("댓글 좋아요를 취소하였습니다.",200);
             return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
         }
 
-        redisRepository.saveSet("comment:like:" + comment.getId(), findUser.getId() + "");
+        redisRepository.saveSet("comment:like:" + comment.getId(), findUser.getId());
         MessageResponseDto responseEntity = new MessageResponseDto("댓글 좋아요를 성공하였습니다.",200);
         return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
 

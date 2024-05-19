@@ -3,10 +3,12 @@ package com.project.trybargain.domain.board.dto;
 import com.project.trybargain.domain.board.entity.Board;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class BoardResponseDto {
     private Long id;
