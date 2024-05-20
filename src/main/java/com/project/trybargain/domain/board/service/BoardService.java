@@ -19,6 +19,7 @@ import com.project.trybargain.domain.user.repository.UserRepository;
 import com.project.trybargain.global.dto.MessageResponseDto;
 import com.project.trybargain.global.redis.RedisRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,10 +29,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional(readOnly = true)
 public class BoardService {
 
@@ -191,6 +194,44 @@ public class BoardService {
 
         MessageResponseDto responseEntity = new MessageResponseDto("게시글 상태 변경을 성공하였습니다.",200);
         return ResponseEntity.status(HttpStatus.OK).body(responseEntity);
+    }
+
+    @Transactional
+    public void boardLikeUpdate() {
+        log.info("좋아요 캐시 업데이트");
+
+        // 전체 게시글 조회
+        boardRepository.findAllBydifBoardLike().forEach(board -> {
+            /*
+             * 캐시가 오류가 난 경우 주의 해야한다. - 캐시는 별도로 백업을 이용해서 유지한다.
+             * 캐시가 오류가 나고 백업이 되기전에 좋아요 수치가 DB에 반영된다면 ? 트레이드 오프인가 ?
+             */
+            String likeKey = "board:like:" + board.getId();
+            // 게시글 좋아요 캐시 정보 - 값 : 유저 아이디
+            Set<Object> setValues = redisRepository.getSetValues(likeKey);
+            // 좋아요 수 = 좋아요 유저 캐시 정보 수
+            int likeCount = setValues.size();
+            // 게시글 DB에 있는 좋아요 수와 캐시 좋아요 수가 다르다면 캐시의 수를 DB에 반영
+            if (board.getBoard_like() != likeCount) {
+                board.changeLike(likeCount);
+            }
+            // 좋아요 취소한 건 어떻게 반영할지 ? 캐시에는 없고 DB에는 있는 것 삭제
+            board.getBoardLikeList().clear();
+
+            // 캐시에 있는 유저아이디를 기준으로 게시글 좋아요 테이블에 추가
+            setValues.forEach(setUserId -> {
+                long userId = Long.parseLong(setUserId.toString());
+                // 매번 유저 정보를 조회하면 N + 1인과 동일한가 ? 벌크 연산을 사용해야하나 ?
+                User findUser = findUser(userId);
+                // 게시글 좋아요가 이미 있는 데이터 인지 확인해 없으면 추가
+                Optional<BoardLike> boardLike = boardLikeRepository.findByUserAndBoard(findUser, board);
+                if (boardLike.isEmpty()) {
+                    board.addLikeList(new BoardLike(board, findUser));
+                }
+            });
+
+
+        });
     }
 
     // 유저 검증
