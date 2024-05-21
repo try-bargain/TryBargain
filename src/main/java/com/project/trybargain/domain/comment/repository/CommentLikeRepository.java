@@ -1,10 +1,12 @@
 package com.project.trybargain.domain.comment.repository;
 
+import com.project.trybargain.domain.comment.entity.Comment;
 import com.project.trybargain.domain.comment.entity.CommentLike;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,5 +30,14 @@ public class CommentLikeRepository {
                     .getResultList()
                     .stream()
                     .findAny();
+    }
+
+    public Optional<CommentLike> findByComment(Comment comment, long userId) {
+        return em.createQuery("SELECT cl FROM CommentLike cl " +
+                        "WHERE cl.comment = :comment AND cl.user.id = :userId", CommentLike.class)
+                .setParameter("userId", userId)
+                .setParameter("comment", comment)
+                .getResultList()
+                .stream().findAny();
     }
 }

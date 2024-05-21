@@ -7,6 +7,7 @@ import com.project.trybargain.domain.user.dto.JoinRequestDto;
 import com.project.trybargain.domain.user.dto.UpdateMyPageRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@NoArgsConstructor
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -42,7 +43,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Board> boardList = new ArrayList<>();
 
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "userinfo_id")
     private UserInfo userInfo;
 
     @OneToMany(mappedBy = "user")
@@ -54,16 +56,12 @@ public class User {
     @OneToMany(mappedBy = "buyer")
     private List<ChattingRoom> buyerChattingRome = new ArrayList<>();
 
-    public User(JoinRequestDto requestDto) {
+    public User(JoinRequestDto requestDto, UserInfo userInfo) {
         this.user_id = requestDto.getUser_id();
         this.user_pw = requestDto.getPassword();
         this.user_nm = requestDto.getUser_nm();
         this.email = requestDto.getEmail();
-    }
-
-    public void addUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
-        userInfo.addUser(this);
     }
 
     public void addComment(Comment comment) {
