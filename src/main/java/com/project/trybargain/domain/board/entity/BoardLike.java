@@ -27,7 +27,7 @@ public class BoardLike {
     private User user;
 
     @NotNull
-    private boolean like_yn = false;
+    private boolean like_yn = true;
 
     public BoardLike(Board board, User user) {
         this.board = board;

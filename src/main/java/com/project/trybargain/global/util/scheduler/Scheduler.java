@@ -1,29 +1,23 @@
 package com.project.trybargain.global.util.scheduler;
 
-import com.project.trybargain.domain.board.entity.Board;
-import com.project.trybargain.domain.board.repository.BoardLikeRepository;
-import com.project.trybargain.domain.board.repository.BoardRepository;
 import com.project.trybargain.domain.board.service.BoardService;
-import com.project.trybargain.global.redis.RedisRepository;
+import com.project.trybargain.domain.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class Scheduler {
 
     private final BoardService boardService;
-    private final BoardLikeRepository boardLikeRepository;
-    private final RedisRepository redisRepository;
+    private final CommentService commentService;
 
-    @Scheduled(cron = "10 * * * * *")
+    @Scheduled(cron = "0/30 * * * * *")
     @Transactional
     public void boardLikeUpdate() {
-        boardService.boardLikeUpdate();
+//        boardService.boardLikeUpdate();
+        commentService.commentLikeUpdate();
     }
 }

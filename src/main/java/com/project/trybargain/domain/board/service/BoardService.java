@@ -213,23 +213,33 @@ public class BoardService {
             int likeCount = setValues.size();
             // 게시글 DB에 있는 좋아요 수와 캐시 좋아요 수가 다르다면 캐시의 수를 DB에 반영
             if (board.getBoard_like() != likeCount) {
+                log.info("좋아요 적용");
                 board.changeLike(likeCount);
+
+                // 좋아요 취소한 건 어떻게 반영할지 ? 캐시에는 없고 DB에는 있는 것 삭제
+                board.getBoardLikeList().forEach(boardLike -> {
+                    if (!redisRepository.isEmptySetValue(likeKey, boardLike.getUser().getId())) {
+                        boardLike.changeLike();
+                    }
+                });
+
+                // 캐시에 있는 유저아이디를 기준으로 게시글 좋아요 테이블에 추가
+                setValues.forEach(setUserId -> {
+                    long userId = Long.parseLong(setUserId.toString());
+                    // 매번 유저 정보를 조회하면 N + 1인과 동일한가 ? 벌크 연산을 사용해야하나 ?
+                    User findUser = findUser(userId);
+                    // 게시글 좋아요가 이미 있는 데이터 인지 확인해 없으면 추가
+                    Optional<BoardLike> findBoardLike = boardLikeRepository.findByUserAndBoard(findUser, board);
+                    if (findBoardLike.isEmpty()) {
+                        log.info("좋아요 추가");
+                        BoardLike boardLike = new BoardLike(board, findUser);
+                        board.addLikeList(boardLike);
+                        boardLikeRepository.save(boardLike);
+                    } else if (!findBoardLike.get().isLike_yn()) {
+                        findBoardLike.get().changeLike();
+                    }
+                });
             }
-            // 좋아요 취소한 건 어떻게 반영할지 ? 캐시에는 없고 DB에는 있는 것 삭제
-            board.getBoardLikeList().clear();
-
-            // 캐시에 있는 유저아이디를 기준으로 게시글 좋아요 테이블에 추가
-            setValues.forEach(setUserId -> {
-                long userId = Long.parseLong(setUserId.toString());
-                // 매번 유저 정보를 조회하면 N + 1인과 동일한가 ? 벌크 연산을 사용해야하나 ?
-                User findUser = findUser(userId);
-                // 게시글 좋아요가 이미 있는 데이터 인지 확인해 없으면 추가
-                Optional<BoardLike> boardLike = boardLikeRepository.findByUserAndBoard(findUser, board);
-                if (boardLike.isEmpty()) {
-                    board.addLikeList(new BoardLike(board, findUser));
-                }
-            });
-
 
         });
     }

@@ -17,6 +17,13 @@ public class CommentRepository {
         em.persist(comment);
     }
 
+    public List<Comment> findAllBydifCommentLike() {
+        List<Comment> commentList = em.createQuery("SELECT c FROM Comment c " +
+                        "WHERE c.active_yn = true", Comment.class)
+                .getResultList();
+        return commentList;
+    }
+
     public Optional<Comment> findById(long id) {
         return em.createQuery("select c from Comment c " +
                         "where c.active_yn = true and c.id = :id", Comment.class)
@@ -25,7 +32,6 @@ public class CommentRepository {
                 .stream()
                 .findAny();
     }
-
 
     public List<Comment> findByBoardId(long boardId) {
         return em.createQuery("select c from Comment c " +

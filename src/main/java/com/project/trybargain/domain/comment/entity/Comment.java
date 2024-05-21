@@ -1,6 +1,8 @@
 package com.project.trybargain.domain.comment.entity;
 
 import com.project.trybargain.domain.board.entity.Board;
+import com.project.trybargain.domain.board.entity.BoardLike;
+import com.project.trybargain.domain.board.entity.BoardStatusEnum;
 import com.project.trybargain.domain.comment.dto.CommentRequestDto;
 import com.project.trybargain.domain.user.entity.User;
 import com.project.trybargain.global.entity.TimeStamp;
@@ -67,5 +69,10 @@ public class Comment extends TimeStamp {
     public void updateLikeCnt(boolean status) {
         if (status) comment_like--;
         else comment_like++;
+    }
+
+    public void addLikeList(CommentLike commentLike) {
+        this.commentLike.add(commentLike);
+        commentLike.addComment(this);
     }
 }

@@ -21,7 +21,7 @@ public class BoardRepository {
 
     public List<Board> findAllBydifBoardLike() {
         List<Board> boardList = em.createQuery("SELECT b FROM Board b " +
-                        "JOIN FETCH b.boardLikeList bl " +
+//                        "JOIN FETCH b.boardLikeList bl " +
                         "WHERE b.active_yn = true", Board.class)
                 .getResultList();
         return boardList;
