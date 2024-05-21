@@ -34,7 +34,6 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 @Transactional(readOnly = true)
 public class BoardService {
 
@@ -198,8 +197,6 @@ public class BoardService {
 
     @Transactional
     public void boardLikeUpdate() {
-        log.info("좋아요 캐시 업데이트");
-
         // 전체 게시글 조회
         boardRepository.findAllBydifBoardLike().forEach(board -> {
             /*
@@ -213,7 +210,6 @@ public class BoardService {
             int likeCount = setValues.size();
             // 게시글 DB에 있는 좋아요 수와 캐시 좋아요 수가 다르다면 캐시의 수를 DB에 반영
             if (board.getBoard_like() != likeCount) {
-                log.info("좋아요 적용");
                 board.changeLike(likeCount);
 
                 // 좋아요 취소한 건 어떻게 반영할지 ? 캐시에는 없고 DB에는 있는 것 삭제
@@ -231,7 +227,6 @@ public class BoardService {
                     // 게시글 좋아요가 이미 있는 데이터 인지 확인해 없으면 추가
                     Optional<BoardLike> findBoardLike = boardLikeRepository.findByUserAndBoard(findUser, board);
                     if (findBoardLike.isEmpty()) {
-                        log.info("좋아요 추가");
                         BoardLike boardLike = new BoardLike(board, findUser);
                         board.addLikeList(boardLike);
                         boardLikeRepository.save(boardLike);

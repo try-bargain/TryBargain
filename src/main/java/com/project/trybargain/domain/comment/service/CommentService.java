@@ -116,13 +116,12 @@ public class CommentService {
             int likeCount = setValues.size();
             // 게시글 DB에 있는 좋아요 수와 캐시 좋아요 수가 다르다면 캐시의 수를 DB에 반영
             if (comment.getComment_like() != likeCount) {
-
                 Set<Long> userIds = new HashSet<>();
-                // 좋아요 취소한 건 어떻게 반영할지 ? 캐시에는 없고 DB에는 있는 것 삭제
+                // 캐시에는 없고 DB에는 있는 것 삭제
                 comment.getCommentLike().forEach(commentLike -> {
                     if (!redisRepository.isEmptySetValue(likeKey, commentLike.getUser().getId())) {
-                        commentLike.updateLikeStatus();
                         comment.updateLikeCnt(commentLike.isLike_yn());
+                        commentLike.updateLikeStatus();
                     } else {
                         userIds.add(commentLike.getUser().getId());
                     }
@@ -133,8 +132,6 @@ public class CommentService {
                     long userId = Long.parseLong(setUserId.toString());
 
                     if (!userIds.contains(userId)) {
-                        System.out.println("캐시에 데이터베이스로");
-
                         Optional<CommentLike> findCommentLike = commentLikeRepository.findByComment(comment, userId);
 
                         if (findCommentLike.isEmpty()) {
@@ -142,13 +139,12 @@ public class CommentService {
                             comment.addLikeList(commentLike);
                             commentLikeRepository.save(commentLike);
                         } else if (!findCommentLike.get().isLike_yn()) {
-                            findCommentLike.get().changeLike();
                             comment.updateLikeCnt(findCommentLike.get().isLike_yn());
+                            findCommentLike.get().changeLike();
                         }
                     }
                 });
             }
-
         });
     }
 
